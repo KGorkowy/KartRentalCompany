@@ -1,0 +1,58 @@
+﻿@page "/gokarts/edit/{Id:int}"
+@using KartRentalCompany.Models
+@using KartRentalCompany.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@inject GokartService GokartService
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Edit Gokart</h3>
+
+<EditForm Model="gokart" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Name:</label>
+        <InputText @bind-Value="gokart.Name" />
+    </div>
+    <div>
+        <label>Manufacturer:</label>
+        <InputText @bind-Value="gokart.Manufacturer" />
+    </div>
+    <div>
+        <label>Year:</label>
+        <InputNumber @bind-Value="gokart.Year" />
+    </div>
+    <div>
+        <label>Image:</label>
+        <InputText @bind-Value="gokart.Image" />
+    </div>
+    <div>
+        <label>Price:</label>
+        <InputNumber @bind-Value="gokart.Price" />
+    </div>
+    <div>
+        <label>Price Per Day:</label>
+        <InputNumber @bind-Value="gokart.PricePerDay" />
+    </div>
+    <button type="submit">Save</button>
+</EditForm>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Gokart gokart = new Gokart();
+
+    protected override async Task OnInitializedAsync()
+    {
+        gokart = await GokartService.GetGokartByIdAsync(Id);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await GokartService.UpdateGokartAsync(gokart);
+        NavigationManager.NavigateTo("/gokarts");
+    }
+}

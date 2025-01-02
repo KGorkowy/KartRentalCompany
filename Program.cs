@@ -1,4 +1,5 @@
 using KartRentalCompany.Data;
+using KartRentalCompany.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,7 @@ namespace KartRentalCompany
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<RoleSeeder>();
+            builder.Services.AddScoped<GokartService>();
 
             var app = builder.Build();
 

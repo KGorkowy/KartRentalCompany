@@ -1,0 +1,52 @@
+﻿@page "/gokarts/create"
+@using KartRentalCompany.Models
+@using KartRentalCompany.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@inject GokartService GokartService
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Create Gokart</h3>
+
+<EditForm Model="gokart" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Name:</label>
+        <InputText @bind-Value="gokart.Name" />
+    </div>
+    <div>
+        <label>Manufacturer:</label>
+        <InputText @bind-Value="gokart.Manufacturer" />
+    </div>
+    <div>
+        <label>Year:</label>
+        <InputNumber @bind-Value="gokart.Year" />
+    </div>
+    <div>
+        <label>Image:</label>
+        <InputText @bind-Value="gokart.Image" />
+    </div>
+    <div>
+        <label>Price:</label>
+        <InputNumber @bind-Value="gokart.Price" />
+    </div>
+    <div>
+        <label>Price Per Day:</label>
+        <InputNumber @bind-Value="gokart.PricePerDay" />
+    </div>
+    <button type="submit">Save</button>
+</EditForm>
+
+@code {
+    private Gokart gokart = new Gokart();
+
+    private async Task HandleValidSubmit()
+    {
+        await GokartService.AddGokartAsync(gokart);
+        NavigationManager.NavigateTo("/gokarts");
+    }
+}
