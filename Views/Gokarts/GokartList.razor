@@ -1,0 +1,70 @@
+﻿@page "/gokarts"
+@using KartRentalCompany.Models
+@using KartRentalCompany.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@inject GokartService GokartService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+<h3>Gokarts</h3>
+
+<button @onclick="CreateGokart" class="btn btn-primary" disabled="@(!isAdmin)">Create New Gokart</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Manufacturer</th>
+            <th>Year</th>
+            <th>Price</th>
+            <th>Price Per Day</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var gokart in gokarts)
+        {
+            <tr>
+                <td>@gokart.Name</td>
+                <td>@gokart.Manufacturer</td>
+                <td>@gokart.Year</td>
+                <td>@gokart.Price</td>
+                <td>@gokart.PricePerDay</td>
+                <td>
+                    <button @onclick="() => EditGokart(gokart.Id)" class="btn btn-secondary" disabled="@(!isAdmin)">Edit</button>
+                    <button @onclick="() => DeleteGokart(gokart.Id)" class="btn btn-danger" disabled="@(!isAdmin)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Gokart> gokarts;
+    private bool isAdmin;
+
+    protected override async Task OnInitializedAsync()
+    {
+        gokarts = await GokartService.GetGokartsAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        isAdmin = user.IsInRole("Admin");
+    }
+
+    private void CreateGokart()
+    {
+        NavigationManager.NavigateTo("/gokarts/create");
+    }
+
+    private void EditGokart(int id)
+    {
+        NavigationManager.NavigateTo($"/gokarts/edit/{id}");
+    }
+
+    private async Task DeleteGokart(int id)
+    {
+        await GokartService.RemoveGokartAsync(id);
+        gokarts = await GokartService.GetGokartsAsync();
+    }
+}
