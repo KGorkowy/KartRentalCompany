@@ -1,18 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KartRentalCompany.Models
 {
     public class Gokart
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Manufacturer { get; set; }
-        public int Year { get; set; }
-        public string? Image { get; set; }
+        public string Name { get; set; }
+        public string Manufacturer { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
+        [Display(Name = "Price Per Day")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal PricePerDay { get; set; }
+        [Display(Name = "Engine Size")]
+        public int EngineSize { get; set; }
+        public string Description { get; set; }
+        [Display(Name = "Image")]
+        public string ImageUrl { get; set; }
     }
 }

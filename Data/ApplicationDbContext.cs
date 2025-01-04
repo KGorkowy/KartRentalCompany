@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using KartRentalCompany.Models;
 
 namespace KartRentalCompany.Data
 {
@@ -11,6 +12,7 @@ namespace KartRentalCompany.Data
             : base(options)
         {
         }
-        public DbSet<Gokart> Gokarts { get; set; }
+        public DbSet<KartRentalCompany.Models.Gokart> Gokart { get; set; } = default!;
+        public DbSet<KartRentalCompany.Models.Reservation> Reservation { get; set; } = default!;
     }
 }
