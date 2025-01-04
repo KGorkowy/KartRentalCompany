@@ -20,7 +20,14 @@ namespace KartRentalCompany
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
             builder.Services.AddScoped<RoleSeeder>();
+
+            // Add authorization policies
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+            });
 
             var app = builder.Build();
 
@@ -42,16 +49,16 @@ namespace KartRentalCompany
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
-            app.MapRazorPages()
-               .WithStaticAssets();
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+            app.MapRazorPages();
 
             app.Run();
         }
