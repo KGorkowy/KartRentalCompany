@@ -12,63 +12,66 @@
     </p>
 }
 
+<style>
+    .wrap {
+        text-align: center;
+    }
+    .nowrap {
+        text-align: center;
+        white-space: nowrap;
+    }
+    .data-nowrap {
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    .data {
+        text-align: center;
+        vertical-align: middle;
+    }
+    .btn-fixed-width {
+        width: 75px;
+    }
+
+    .table {
+        width: 100%;
+        table-layout: auto;
+    }
+    .description {
+        text-align: justify;
+        vertical-align: middle;
+    }
+</style>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Manufacturer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PricePerDay)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EngineSize)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th></th>
+            <th class="nowrap">@Html.DisplayNameFor(model => model.Manufacturer)</th>
+            <th class="nowrap">@Html.DisplayNameFor(model => model.Name)</th>
+            <th class="nowrap">@Html.DisplayNameFor(model => model.Price)</th>
+            <th class="nowrap">@Html.DisplayNameFor(model => model.PricePerDay)</th>
+            <th class="nowrap">@Html.DisplayNameFor(model => model.EngineSize)</th>
+            <th class="wrap">@Html.DisplayNameFor(model => model.Description)</th>
+            <th class="wrap">@Html.DisplayNameFor(model => model.ImageUrl)</th>
+            <th class="wrap">Options</th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Manufacturer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-                <td>
-                    @item.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))
-                </td>
-                <td>
-                    @item.PricePerDay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EngineSize)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <img src="@item.ImageUrl" alt="@item.Name" style="max-width: 100px;" />
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+            <td class="data-nowrap">@Html.DisplayFor(modelItem => item.Manufacturer)</td>
+            <td class="data-nowrap">@Html.DisplayFor(modelItem => item.Name)</td>
+            <td class="data-nowrap">@item.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))</td>
+            <td class="data-nowrap">@item.PricePerDay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))</td>
+            <td class="data-nowrap">@Html.DisplayFor(modelItem => item.EngineSize)</td>
+            <td class="description">@Html.DisplayFor(modelItem => item.Description)</td>
+            <td class="data"><img src="@item.ImageUrl" alt="@item.Name" style="max-width: 100px;" /></td>
+            <td class="data">
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-fixed-width">Details</a>
                 @if (User.IsInRole("Admin"))
                 {
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-fixed-width">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-fixed-width">Delete</a>
                 }
             </td>
         </tr>

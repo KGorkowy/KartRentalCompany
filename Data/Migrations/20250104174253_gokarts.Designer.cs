@@ -13,7 +13,7 @@ namespace KartRentalCompany.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250104174253_gokarts")]
-    partial class gokarts
+    partial class Gokarts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

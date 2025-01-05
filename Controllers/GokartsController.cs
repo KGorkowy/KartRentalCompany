@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using KartRentalCompany.Data;
 using KartRentalCompany.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Data.SqlClient;
 
 namespace KartRentalCompany.Controllers
 {
@@ -15,10 +11,12 @@ namespace KartRentalCompany.Controllers
     public class GokartsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<GokartsController> _logger;
 
-        public GokartsController(ApplicationDbContext context)
+        public GokartsController(ApplicationDbContext context, ILogger<GokartsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Gokarts
@@ -56,14 +54,34 @@ namespace KartRentalCompany.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "RequireAdminRole")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Manufacturer,Price,PricePerDay,EngineSize,Description,ImageUrl")] Gokart gokart)
+        public async Task<IActionResult> Create([Bind("Name,Manufacturer,Price,PricePerDay,EngineSize,Description,ImageUrl")] Gokart gokart)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(gokart);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    // Call the stored procedure
+                    await _context.Database.ExecuteSqlRawAsync(
+                        "EXEC AddGokart @Manufacturer, @Name, @Price, @PricePerDay, @EngineSize, @Description, @ImageUrl",
+                        new SqlParameter("@Manufacturer", gokart.Manufacturer),
+                        new SqlParameter("@Name", gokart.Name),
+                        new SqlParameter("@Price", gokart.Price),
+                        new SqlParameter("@PricePerDay", gokart.PricePerDay),
+                        new SqlParameter("@EngineSize", gokart.EngineSize),
+                        new SqlParameter("@Description", gokart.Description),
+                        new SqlParameter("@ImageUrl", gokart.ImageUrl)
+                    );
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    // Log the error and show a user-friendly message
+                    _logger.LogError(ex, "Error occurred while creating a Gokart using the stored procedure.");
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving. Please try again.");
+                }
             }
+
             return View(gokart);
         }
 
