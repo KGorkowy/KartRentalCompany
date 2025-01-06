@@ -117,8 +117,11 @@ namespace KartRentalCompany.Controllers
             {
                 try
                 {
-                    _context.Update(gokart);
-                    await _context.SaveChangesAsync();
+                    _context.Entry(gokart).Property(x => x.PricePerDay).IsModified = true;
+                    await _context.Database.ExecuteSqlRawAsync(
+                        "UPDATE Gokart SET Description = {0}, EngineSize = {1}, ImageUrl = {2}, Manufacturer = {3}, Name = {4}, Price = {5}, PricePerDay = {6} WHERE Id = {7}",
+                        gokart.Description, gokart.EngineSize, gokart.ImageUrl, gokart.Manufacturer, gokart.Name, gokart.Price, gokart.PricePerDay, gokart.Id
+                    );
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -131,7 +134,16 @@ namespace KartRentalCompany.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while updating a Gokart.");
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving. Please try again.");
+                    return RedirectToAction(nameof(Index));
+                }
+{
+    // Re-enable the trigger
+    await _context.Database.ExecuteSqlRawAsync("ENABLE TRIGGER GokartPricePerDayChange ON Gokart");
+}
             }
             return View(gokart);
         }
