@@ -1,60 +1,73 @@
-﻿using KartRentalCompany.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KartRentalCompany.Controllers
+[Authorize(Roles = "Admin")]
+public class AdminController : Controller
 {
-    [Authorize(Roles = "Admin")]
-    public class AdminController : Controller
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
+
+    public AdminController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        _userManager = userManager;
+        _roleManager = roleManager;
+    }
 
-        public AdminController(UserManager<IdentityUser> userManager)
+    public async Task<IActionResult> Index()
+    {
+        var adminRole = await _roleManager.FindByNameAsync("Admin");
+        if (adminRole == null)
         {
-            _userManager = userManager;
+            return View(new List<IdentityUser>());
         }
 
-        // GET: Admins
-        [HttpGet]
-        public IActionResult ManageAdmins()
+        var admins = await _userManager.GetUsersInRoleAsync("Admin");
+        return View(admins);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddAdmin(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
         {
-            return View(new AdminViewModel());
+            TempData["ErrorMessage"] = $"No user found with the email '{email}'.";
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AssignRole(AdminViewModel model)
+        var result = await _userManager.AddToRoleAsync(user, "Admin");
+        if (result.Succeeded)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return NotFound($"User with email {model.Email} could not be found");
-            }
-            var result = await _userManager.AddToRoleAsync(user, model.Role);
-            if (result.Succeeded)
-            {
-                return Ok($"User {model.Email} was successfully assigned to role {model.Role}.");
-            }
-            return BadRequest(result.Errors);
+            TempData["SuccessMessage"] = $"{user.UserName} ({email}) has been added to the Admin role.";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = $"Failed to add {email} to the Admin role: {string.Join(", ", result.Errors.Select(e => e.Description))}";
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RemoveRole(AdminViewModel model)
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RemoveAdmin(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return NotFound($"User with email {model.Email} could not be found");
-            }
-            var result = await _userManager.RemoveFromRoleAsync(user, model.Role);
-            if (result.Succeeded)
-            {
-                return Ok($"User {model.Email} was successfully removed from role {model.Role}.");
-            }
-            return BadRequest(result.Errors);
+            return NotFound(); 
         }
+
+        var result = await _userManager.RemoveFromRoleAsync(user, "Admin");
+        if (result.Succeeded)
+        {
+            TempData["SuccessMessage"] = $"{user.UserName} has been removed from the Admin role.";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = $"Failed to remove {user.UserName} from the Admin role: {string.Join(", ", result.Errors.Select(e => e.Description))}";
+        }
+
+        return RedirectToAction(nameof(Index));
     }
 }
-
-/* ToDo: Add role handling through the views
- * Add a view with a reservation callendar, admin restricted */

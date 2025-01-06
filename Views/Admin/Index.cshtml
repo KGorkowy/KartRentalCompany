@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<IdentityUser>
+@{
+    ViewData["Title"] = "Manage Admins";
+}
+
+<h1>Manage Admins</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var admin in Model)
+        {
+            <tr>
+                <td>@admin.Email</td>
+                <td>
+                    <form asp-action="RemoveAdmin" method="post">
+                        <input type="hidden" name="userId" value="@admin.Id" />
+                        <button class="btn btn-danger" type="submit">Remove Admin</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Add New Admin</h3>
+<form asp-action="AddAdmin" method="post">
+    <div class="form-group">
+        <label for="email">Email Address:</label>
+        <input type="email" class="form-control" id="email" name="email" required />
+    </div>
+    <br/>
+    <button class="btn btn-primary" type="submit">Add Admin</button>
+</form>

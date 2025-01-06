@@ -1,4 +1,5 @@
 using KartRentalCompany.Data;
+using KartRentalCompany.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,23 +23,16 @@ namespace KartRentalCompany
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
             builder.Services.AddScoped<RoleSeeder>();
+
+            // Add cookie and session services
+            builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-            }
-            );
-            builder.Services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            builder.Logging.ClearProviders();
-            builder.Logging.AddConsole();
-            builder.Logging.AddDebug();
 
-            // Add authorization policies
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
@@ -66,12 +60,15 @@ namespace KartRentalCompany
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-
-            app.UseCookiePolicy();
-            app.UseSession();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Add session middleware
+            app.UseSession();
+
+            // Add RoleCheckMiddleware
+            app.UseMiddleware<RoleCheckMiddleware>();
 
             app.MapControllerRoute(
                 name: "default",
