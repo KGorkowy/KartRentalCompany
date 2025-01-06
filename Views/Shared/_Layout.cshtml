@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - KartRentalCompany</title>
-    <script type="importmap"></script>
+    <link rel="icon" type="image/x-icon" href="icon.ico">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KartRentalCompany.styles.css" asp-append-version="true" />
@@ -39,8 +39,15 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+    </div> 
+    <!--
+    <div id="cookieConsent" class="cookie-banner" style="display:none; position: fixed; bottom: 0; width: 100%; background-color: #333; color: white; padding: 10px; text-align: center; z-index: 1000;">
+        <span>
+            This website uses cookies to ensure you get the best experience. By continuing to use this site, you accept our cookie policy.
+        </span>
+        <button id="acceptCookies" class="btn btn-primary" style="margin-left: 10px;">Accept</button>
     </div>
-
+    -->
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - KartRentalCompany
@@ -49,6 +56,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/cookieConsent.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

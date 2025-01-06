@@ -14,32 +14,32 @@
 
 <style>
     .wrap {
-        text-align: center;
+    text-align: center;
     }
     .nowrap {
-        text-align: center;
-        white-space: nowrap;
+    text-align: center;
+    white-space: nowrap;
     }
     .data-nowrap {
-        text-align: center;
-        vertical-align: middle;
-        white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
     }
     .data {
-        text-align: center;
-        vertical-align: middle;
+    text-align: center;
+    vertical-align: middle;
     }
     .btn-fixed-width {
-        width: 75px;
+    width: 75px;
     }
 
     .table {
-        width: 100%;
-        table-layout: auto;
+    width: 100%;
+    table-layout: auto;
     }
     .description {
-        text-align: justify;
-        vertical-align: middle;
+    text-align: justify;
+    vertical-align: middle;
     }
 </style>
 
@@ -48,7 +48,10 @@
         <tr>
             <th class="nowrap">@Html.DisplayNameFor(model => model.Manufacturer)</th>
             <th class="nowrap">@Html.DisplayNameFor(model => model.Name)</th>
+            @if (User.IsInRole("Admin"))
+            {
             <th class="nowrap">@Html.DisplayNameFor(model => model.Price)</th>
+            }
             <th class="nowrap">@Html.DisplayNameFor(model => model.PricePerDay)</th>
             <th class="nowrap">@Html.DisplayNameFor(model => model.EngineSize)</th>
             <th class="wrap">@Html.DisplayNameFor(model => model.Description)</th>
@@ -61,7 +64,10 @@
         <tr>
             <td class="data-nowrap">@Html.DisplayFor(modelItem => item.Manufacturer)</td>
             <td class="data-nowrap">@Html.DisplayFor(modelItem => item.Name)</td>
-            <td class="data-nowrap">@item.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))</td>
+            @if (User.IsInRole("Admin"))
+            {
+                <td class="data-nowrap">@item.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))</td>
+            }
             <td class="data-nowrap">@item.PricePerDay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))</td>
             <td class="data-nowrap">@Html.DisplayFor(modelItem => item.EngineSize)</td>
             <td class="description">@Html.DisplayFor(modelItem => item.Description)</td>

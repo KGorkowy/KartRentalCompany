@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KartRentalCompany.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -14,39 +15,46 @@ namespace KartRentalCompany.Controllers
             _userManager = userManager;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AssignRole(string email, string role)
+        // GET: Admins
+        [HttpGet]
+        public IActionResult ManageAdmins()
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            return View(new AdminViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(AdminViewModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                return NotFound($"User with email {email} could not be found");
+                return NotFound($"User with email {model.Email} could not be found");
             }
-            var result = await _userManager.AddToRoleAsync(user, role);
+            var result = await _userManager.AddToRoleAsync(user, model.Role);
             if (result.Succeeded)
             {
-                return Ok($"User {email} was successfully assigned to role {role}.");
+                return Ok($"User {model.Email} was successfully assigned to role {model.Role}.");
             }
             return BadRequest(result.Errors);
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public IActionResult AdminOnly()
+        [HttpPost]
+        public async Task<IActionResult> RemoveRole(AdminViewModel model)
         {
-            return Ok("You are an admin!");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> IsUserAdmin(string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                return NotFound($"User with email {email} could not be found");
+                return NotFound($"User with email {model.Email} could not be found");
             }
-            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
-            return Ok(new { Email = email, IsAdmin = isAdmin });
+            var result = await _userManager.RemoveFromRoleAsync(user, model.Role);
+            if (result.Succeeded)
+            {
+                return Ok($"User {model.Email} was successfully removed from role {model.Role}.");
+            }
+            return BadRequest(result.Errors);
         }
     }
 }
+
+/* ToDo: Add role handling through the views
+ * Add a view with a reservation callendar, admin restricted */

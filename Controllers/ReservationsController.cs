@@ -164,3 +164,7 @@ namespace KartRentalCompany.Controllers
         }
     }
 }
+
+/* ToDo: Make more advanced validation:
+check if the gokart is available at the given time;
+check if start date is before end date; */
