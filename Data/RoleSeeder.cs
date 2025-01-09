@@ -27,21 +27,6 @@ namespace KartRentalCompany.Data
             {
                 await _roleManager.CreateAsync(new IdentityRole("User"));
             }
-            /*
-            var adminEmail = _configuration["AdminCredentials:Email"];
-            var adminPassword = _configuration["AdminCredentials:Password"];
-            var adminUser = await userManager.FindByEmailAsync(adminEmail);
-
-            if (adminUser == null)
-            {
-                adminUser = new IdentityUser { UserName = adminEmail, Email = adminEmail };
-                await userManager.CreateAsync(adminUser, adminPassword);
-            }
-
-            if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
-            {
-                await userManager.AddToRoleAsync(adminUser, "Admin");
-            }*/
         }
     }
 }

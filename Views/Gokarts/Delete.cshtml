@@ -45,7 +45,7 @@
             @Html.DisplayNameFor(model => model.ImageUrl)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageUrl)
+            <img src="@Model.ImageUrl" alt="@Model.Name" style="max-width: 300px;" />
         </dd>
     </dl>
     

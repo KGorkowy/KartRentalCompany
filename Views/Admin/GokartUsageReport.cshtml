@@ -1,0 +1,28 @@
+﻿@model IEnumerable<KartRentalCompany.Models.GokartUsageViewModel>
+
+@{
+    ViewData["Title"] = "Gokart Usage Report";
+}
+
+<h1>Gokart Usage Report</h1>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Gokart</th>
+            <th>Total Usage Days</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.GokartName</td>
+            <td>@item.TotalUsageDays</td>
+        </tr>
+}
+    </tbody>
+</table>
+<br />
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

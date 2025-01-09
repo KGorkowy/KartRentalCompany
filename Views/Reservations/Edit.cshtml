@@ -1,74 +1,48 @@
 ﻿@model KartRentalCompany.Models.Reservation
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Reservation";
 }
 
-<h1>Edit</h1>
+<h1>Edit Reservation</h1>
 
-<h4>Reservation</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <div class="form-check">
+                <input asp-for="IsApproved" class="form-check-input" type="checkbox" checked="@ViewBag.IsApproved" />
+                <label asp-for="IsApproved" class="form-check-label">Approved</label>
+            </div>
+            <div class="form-check">
+                <input asp-for="IsTakenAway" class="form-check-input" type="checkbox" checked="@ViewBag.IsTakenAway" />
+                <label asp-for="IsTakenAway" class="form-check-label">Taken Away</label>
+            </div>
+            <div class="form-check">
+                <input asp-for="IsReturned" class="form-check-input" type="checkbox" checked="@ViewBag.IsReturned" />
+                <label asp-for="IsReturned" class="form-check-label">Returned</label>
+            </div>
+            <div class="form-check">
+                <input asp-for="IsCancelled" class="form-check-input" type="checkbox" checked="@ViewBag.IsCancelled" />
+                <label asp-for="IsCancelled" class="form-check-label">Cancelled</label>
+            </div>
+
+            <br />
+
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GokartId" class="control-label"></label>
-                <select asp-for="GokartId" class="form-control" asp-items="ViewBag.GokartId"></select>
-                <span asp-validation-for="GokartId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsApproved" /> @Html.DisplayNameFor(model => model.IsApproved)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsTakenAway" /> @Html.DisplayNameFor(model => model.IsTakenAway)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsReturned" /> @Html.DisplayNameFor(model => model.IsReturned)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsCancelled" /> @Html.DisplayNameFor(model => model.IsCancelled)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="TotalCost" class="control-label"></label>
-                <input asp-for="TotalCost" class="form-control" />
-                <span asp-validation-for="TotalCost" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

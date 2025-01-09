@@ -29,6 +29,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Reservations" asp-action="Index">Reservations</a>
                         </li>
+                        @if (User.IsInRole("Admin")) {
+                            <li>
+                                <a class="nav-link text-dark" asp-area"" asp-controller="Admin" asp-action="Index">Admin</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -39,15 +44,7 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
-    </div> 
-    <!--
-    <div id="cookieConsent" class="cookie-banner" style="display:none; position: fixed; bottom: 0; width: 100%; background-color: #333; color: white; padding: 10px; text-align: center; z-index: 1000;">
-        <span>
-            This website uses cookies to ensure you get the best experience. By continuing to use this site, you accept our cookie policy.
-        </span>
-        <button id="acceptCookies" class="btn btn-primary" style="margin-left: 10px;">Accept</button>
     </div>
-    -->
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - KartRentalCompany

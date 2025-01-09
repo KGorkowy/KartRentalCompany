@@ -1,82 +1,53 @@
-﻿@model KartRentalCompany.Models.Reservation
-
-@{
-    ViewData["Title"] = "Create";
+﻿@{
+    ViewData["Title"] = "Create a reservation";
 }
 
-<h1>Create</h1>
+<h1>Create Reservation</h1>
 
-<h4>Reservation</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="form-group">
+                    <label for="userEmail" class="control-label">User Email</label>
+                    <select id="userEmail" name="userEmail" class="form-control" asp-items="ViewBag.Users"></select>
+                </div>
+            }
+            else
+            {
+                <input type="hidden" id="userEmail" name="userEmail" value="@User.Identity.Name" />
+            }
+
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+                <label for="gokartId" class="control-label">Gokart</label>
+                <select id="gokartId" name="gokartId" class="form-control" asp-items="ViewBag.Gokarts"></select>
             </div>
+
             <div class="form-group">
-                <label asp-for="GokartId" class="control-label"></label>
-                <select asp-for="GokartId" class ="form-control" asp-items="ViewBag.GokartId"></select>
+                <label for="startDate" class="control-label">Start Date</label>
+                <input id="startDate" name="startDate" class="form-control" type="date" />
             </div>
+
             <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
+                <label for="endDate" class="control-label">End Date</label>
+                <input id="endDate" name="endDate" class="form-control" type="date" />
             </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsApproved" /> @Html.DisplayNameFor(model => model.IsApproved)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsTakenAway" /> @Html.DisplayNameFor(model => model.IsTakenAway)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsReturned" /> @Html.DisplayNameFor(model => model.IsReturned)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsCancelled" /> @Html.DisplayNameFor(model => model.IsCancelled)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="TotalCost" class="control-label"></label>
-                <input asp-for="TotalCost" class="form-control" />
-                <span asp-validation-for="TotalCost" class="text-danger"></span>
-            </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
-
-
-<!-- 
-    ToDo:
-    Reservations should take current users ID automatically, work 
-    on Gokart manufacturer + name instead of ID
-    bools should be handled by admin, user should have his own view
-    of his reservations and an option to cancel them
-    total cost should use a function to calculate <a href="#"></a>
-    think about adding coupons
--->

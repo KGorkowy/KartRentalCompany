@@ -2,7 +2,19 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p></p>
+<div class="jumbotron">
+    <h1>Welcome to Schumi!</h1>
+    <p class="lead">Your one-stop solution for renting the best gokarts in town.</p>
+    <hr class="my-4">
+    <p>Explore our wide range of go-karts and make your reservation today.</p>
+    <a class="btn btn-primary" href="@Url.Action("Create", "Reservations")" role="button">Create Reservation</a>
+    <a class="btn btn-secondary" href="@Url.Action("Index", "Reservations")" role="button">View Reservations</a>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <h2>Our Go-Karts</h2>
+        <p>We offer a variety of gokarts to suit all ages and skill levels. From beginner to professional, we have the perfect gokart for you.</p>
+        <a class="btn btn-primary" href="@Url.Action("Index", "Gokarts")">View Go-Karts &raquo;</a>
+    </div>
 </div>
